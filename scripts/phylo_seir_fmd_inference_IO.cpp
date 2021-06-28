@@ -38,16 +38,11 @@ if ((line_count==1) & (field_count==7)) fs >> para_other_arg.n_seq;
 //if ((line_count==1) & (field_count==8)) fs >> para_other_arg.n_base;
 
 if ((line_count==1) & (field_count==8)){
-	switch(ind_n_base_part==1){
-		case 0:{
-		fs >> para_other_arg.n_base;
-		break;
+	if(ind_n_base_part==1){ // True if the data is partial
+        para_other_arg.n_base = n_base_part; // this change the para_other.n_base to be n_base_part
+		} else {
+        fs >> para_other_arg.n_base;
 		}
-		case 1:{
-		para_other_arg.n_base = n_base_part; // this change the para_other.n_base to be n_base_part
-		break;
-		}
-	}
 }
 
 field_count = field_count + 1;
@@ -72,7 +67,7 @@ myfile_out_simpara.close();
 
 /*--------------------------------------------*/
 //-------------
-void IO_simdata (para_key para_true_arg, para_aux para_other_arg, vector < vector<double> >& coordinate_arg, epi_struct& epi_final_arg, nt_struct& nt_data_arg, vector<int>& index_arg, vector<int>& con_seq){ // this function is called to input/output data from simulation
+void IO_simdata (para_key para_true_arg, const para_aux& para_other_arg, vector < vector<double> >& coordinate_arg, epi_struct& epi_final_arg, nt_struct& nt_data_arg, vector<int>& index_arg, vector<int>& con_seq){ // this function is called to input/output data from simulation
 
 ifstream myfile_in_simdata;
 ofstream myfile_out_simdata; 

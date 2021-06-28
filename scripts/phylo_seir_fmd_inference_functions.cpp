@@ -35,15 +35,7 @@ inline double lh_snull(const vector<int>& con_seq, const vector<int>& seq, const
 	int m=0;
 
 	for (int i=0;i<=(n_base-1);i++){
-		switch(seq.at(i)!=con_seq.at(i)){
-			case 1:{ // a change
-				m = m +1;
-			break;
-			}
-			case 0:{ // not a change
-			break;
-			}
-		}
+		if(seq.at(i)!=con_seq.at(i)) m = m +1;
 	}
 
 	lh_snull = m*log(p_ber) + (n_base-m)*log(1-p_ber) + m*log(1.0/3.0); 
@@ -54,21 +46,13 @@ inline double lh_snull(const vector<int>& con_seq, const vector<int>& seq, const
 
 /*-------------------------------------------------------*/
 
-inline double lh_snull_base(const int& con_base, const int& base, const double& p_ber){ // compute the log pr a base for background
+inline double lh_snull_base(const int& con_base, const int& base, const double& p_ber) { // compute the log pr a base for background
 
 	double lh_snull_base=0.0;
 
 	int m=0;
 
-		switch(base!=con_base){
-			case 1:{ // a change
-				m = m +1;
-			break;
-			}
-			case 0:{ // not a change
-			break;
-			}
-		}
+    if (base != con_base) m = m + 1;
 
 	lh_snull_base = m*log(p_ber) + (1-m)*log(1-p_ber) + m*log(1.0/3.0);
 	//lh_snull_base = m*log(p_ber) + (1-m)*log(1-p_ber) ;
@@ -549,11 +533,7 @@ for ( int i=0;i<=(n_base-1); i++){
 		}
 	break;
 	}
-	case 2:{
-	count_3 = count_3 + 1;
-	break;
-	}
-	case 3:{
+	case (2 | 3):{
 	count_3 = count_3 + 1;
 	break;
 	}
@@ -580,7 +560,7 @@ for ( int i=0;i<=(n_base-1); i++){
 
 double log_lh_base (int& base_1, int& base_2, double t_1_arg, double t_2_arg , double mu_1_arg, double mu_2_arg){
 
-double log_lh=-99.0;;
+double log_lh=-99.0;
 
 double dt = t_2_arg - t_1_arg;
 
@@ -962,7 +942,7 @@ for (int i=0;i<= (int)(xi_E_Clh.size()-1);i++){ // loop over all the infected
 //------------------------------------------//
 
 
-if (xi_E_minus_Clh.size()>=1){
+if (!xi_E_minus_Clh.empty()){
 
 for (int i=0;i<= (int)(xi_E_minus_Clh.size()-1);i++){
    
@@ -1032,7 +1012,7 @@ lh_square_arg.f_E.at(xi_E_minus_Clh.at(i)) = lh_square_arg.g_E.at(xi_E_minus_Clh
 
 //----------//
 
-if (xi_I_Clh.size()>=1){
+if (!xi_I_Clh.empty()){
 for (int i=0;i<= (int)(xi_I_Clh.size()-1);i++){
 //lh_square_arg.f_I.at(xi_I_Clh.at(i)) = gsl_ran_gamma_pdf(t_i_Clh.at(xi_I_Clh.at(i)) - t_e_Clh.at(xi_I_Clh.at(i)), a_Clh, b_Clh);
 lh_square_arg.f_I.at(xi_I_Clh.at(i)) = func_latent_pdf(t_i_Clh.at(xi_I_Clh.at(i)) - t_e_Clh.at(xi_I_Clh.at(i)), mu_lat_Clh,var_lat_Clh);
@@ -1048,7 +1028,7 @@ lh_square_arg.f_I.at(xi_I_Clh.at(i)) = func_latent_pdf(t_i_Clh.at(xi_I_Clh.at(i)
 // }
 // }
 
-if (xi_R_Clh.size()>=1){
+if (!xi_R_Clh.empty()){
 for (int i=0;i<= (int)(xi_R_Clh.size()-1);i++){
 lh_square_arg.f_R.at(xi_R_Clh.at(i)) = gsl_ran_exponential_pdf(t_r_Clh.at(xi_R_Clh.at(i)) - t_i_Clh.at(xi_R_Clh.at(i)), c_Clh);
 }
@@ -1056,7 +1036,7 @@ lh_square_arg.f_R.at(xi_R_Clh.at(i)) = gsl_ran_exponential_pdf(t_r_Clh.at(xi_R_C
 
 //-------//
 
-if (xi_EnI_Clh.size()>=1){
+if (!xi_EnI_Clh.empty()){
 for (int i=0;i<= (int)(xi_EnI_Clh.size()-1);i++){
 //lh_square_arg.f_EnI.at(xi_EnI_Clh.at(i)) = 1.0 -  gsl_cdf_gamma_P(t_max_Clh - t_e_Clh.at(xi_EnI_Clh.at(i)), a_Clh, b_Clh);
 lh_square_arg.f_EnI.at(xi_EnI_Clh.at(i)) = 1.0 -  func_latent_cdf(t_max_Clh - t_e_Clh.at(xi_EnI_Clh.at(i)),mu_lat_Clh,var_lat_Clh);
@@ -1070,7 +1050,7 @@ lh_square_arg.f_EnI.at(xi_EnI_Clh.at(i)) = 1.0 -  func_latent_cdf(t_max_Clh - t_
 // }
 // }
 
-if (xi_InR_Clh.size()>=1){
+if (!xi_InR_Clh.empty()){
 for (int i=0;i<= (int)(xi_InR_Clh.size()-1);i++){
 lh_square_arg.f_InR.at(xi_InR_Clh.at(i)) = 1.0 -  gsl_cdf_exponential_P(t_max_Clh - t_i_Clh.at(xi_InR_Clh.at(i)), c_Clh);
 }
@@ -1881,7 +1861,7 @@ log_lh_modified = log_lh_modified - log(lh_square_modified.f_E.at(xi_E_minus_arg
 	default :{ // not by background
 	//lh_square_modified.k_sum_E.at(xi_E_minus_arg.at(i)) = lh_square_modified.k_sum_E.at(xi_E_minus_arg.at(i)) ; // this unchanged as long as infectious source unchanged
 	lh_square_modified.g_E.at(xi_E_minus_arg.at(i)) =  beta_proposed*stb_arg.at(xi_E_minus_arg.at(i))*lh_square_modified.k_sum_E.at(xi_E_minus_arg.at(i));
- ;
+
 	break;
 	}
 
